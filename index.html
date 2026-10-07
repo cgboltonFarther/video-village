@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Village | Farther</title>
+<style>
+  :root{
+    --cream:#FFFEF4; --gold:#C3C1A8; --navy:#02112A;
+    --klein:#142EDB; --green:#39D435; --sage:#BFE1BE;
+    --steel:#6EA6CD; --powder:#BAE8EB; --orange:#FE665C;
+    --line:rgba(2,17,42,.14); --muted:rgba(2,17,42,.62);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;background:var(--cream);color:var(--navy);line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input,select,textarea{font:inherit;color:var(--navy)}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+
+  /* Nav */
+  header{position:sticky;top:0;z-index:40;background:rgba(255,254,244,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand svg{height:34px;width:auto}
+  .brand .word{font-weight:700;font-size:20px;letter-spacing:.01em}
+  .brand .divider{width:1px;height:26px;background:var(--line)}
+  .brand .product{font-size:15px;color:var(--muted)}
+  .nav ul{display:flex;gap:30px;list-style:none;font-size:15px}
+  .nav ul a{padding:6px 0;border-bottom:2px solid transparent}
+  .nav ul a:hover{border-color:var(--navy)}
+  .tray-btn{display:flex;align-items:center;gap:10px;background:var(--navy);color:var(--cream);padding:10px 18px;border-radius:999px;font-size:14px;font-weight:600}
+  .tray-btn .count{background:var(--green);color:var(--navy);border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:12px;font-weight:700}
+
+  /* Hero */
+  .hero{padding:88px 0 72px;border-bottom:1px solid var(--line)}
+  .hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:64px;align-items:center}
+  .hero h1{font-size:clamp(44px,6vw,80px);line-height:1.02;font-weight:500;letter-spacing:-.025em;margin:18px 0 24px}
+  .hero p{font-size:19px;color:var(--muted);max-width:520px}
+  .hero-ctas{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;font-weight:600;font-size:15px;transition:transform .15s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-dark{background:var(--navy);color:var(--cream)}
+  .btn-line{border:1.5px solid var(--navy)}
+  .btn-blue{background:var(--klein);color:#fff}
+  .hero-tiles{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:170px 170px;gap:12px}
+  .tile{border-radius:4px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;transition:transform .2s}
+  .tile:hover{transform:translateY(-3px)}
+  .tile .eyebrow{font-size:11px}
+  .tile strong{font-size:22px;font-weight:500;line-height:1.15}
+  .tile.big{grid-row:span 2;background:var(--navy);color:var(--cream)}
+  .tile.big strong{font-size:30px}
+  .tile .arcs{position:absolute;right:-40px;bottom:-40px;opacity:.9}
+
+  /* Sections */
+  section.block{padding:88px 0;border-bottom:1px solid var(--line)}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:40px;flex-wrap:wrap}
+  .sec-head .num{font-size:13px;color:var(--muted);margin-bottom:10px}
+  .sec-head h2{font-size:clamp(34px,4vw,52px);font-weight:500;letter-spacing:-.02em;line-height:1.05}
+  .sec-head p{color:var(--muted);max-width:460px;font-size:16px}
+  .rule{display:flex;align-items:center;gap:18px;margin-bottom:28px;font-size:15px}
+  .rule::after{content:"";flex:1;height:1px;background:var(--navy);border-top-right-radius:6px}
+
+  /* Podcast */
+  .podcast{background:var(--navy);color:var(--cream);border-bottom:none}
+  .podcast .sec-head p,.podcast .sec-head .num{color:rgba(255,254,244,.65)}
+  .pod-feature{display:grid;grid-template-columns:340px 1fr;gap:48px;margin-bottom:48px;align-items:center}
+  .pod-art{aspect-ratio:1;background:var(--gold);border-radius:4px;position:relative;overflow:hidden;padding:28px;display:flex;flex-direction:column;justify-content:space-between;color:var(--navy)}
+  .pod-art .title{font-size:44px;line-height:.98;font-weight:500;letter-spacing:-.02em;position:relative;z-index:2}
+  .pod-art .by{font-size:13px;font-weight:600;position:relative;z-index:2}
+  .pod-art svg{position:absolute;right:-30px;bottom:-30px;z-index:1}
+  .pod-info h3{font-size:30px;font-weight:500;margin:10px 0 14px;letter-spacing:-.01em}
+  .pod-info p{color:rgba(255,254,244,.72);max-width:560px}
+  .player{margin-top:26px;display:flex;align-items:center;gap:16px;background:rgba(255,254,244,.06);border:1px solid rgba(255,254,244,.14);border-radius:999px;padding:10px 20px 10px 10px;max-width:560px}
+  .play{width:44px;height:44px;border-radius:50%;background:var(--green);display:grid;place-items:center;flex-shrink:0}
+  .bar{flex:1;height:4px;background:rgba(255,254,244,.18);border-radius:4px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--green);transition:width .3s linear}
+  .player .time{font-size:13px;color:rgba(255,254,244,.65);font-variant-numeric:tabular-nums}
+  .episodes{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,254,244,.14);border:1px solid rgba(255,254,244,.14)}
+  .ep{background:var(--navy);padding:26px;display:flex;flex-direction:column;gap:12px;min-height:230px}
+  .ep .meta{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,254,244,.6)}
+  .ep h4{font-size:19px;font-weight:500;line-height:1.25}
+  .ep p{font-size:14px;color:rgba(255,254,244,.66);flex:1}
+  .ep .actions{display:flex;gap:8px}
+  .chip-btn{font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid currentColor;display:inline-flex;align-items:center;gap:6px}
+  .chip-btn.solid{background:var(--cream);color:var(--navy);border-color:var(--cream)}
+  .chip-btn.added{background:var(--green);color:var(--navy);border-color:var(--green)}
+
+  /* Library */
+  .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:28px}
+  .search{flex:1;min-width:240px;display:flex;align-items:center;gap:10px;border:1.5px solid var(--navy);border-radius:999px;padding:0 18px;height:46px;background:#fff}
+  .search input{border:none;outline:none;flex:1;background:transparent;font-size:15px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .filter{padding:9px 16px;border-radius:999px;border:1px solid var(--line);font-size:14px;background:#fff}
+  .filter.on{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s}
+  .card:hover{box-shadow:0 14px 34px -18px rgba(2,17,42,.35);transform:translateY(-2px)}
+  .thumb{aspect-ratio:16/9;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:14px}
+  .thumb svg.art{position:absolute;inset:0;width:100%;height:100%}
+  .thumb .dur{position:relative;background:var(--navy);color:var(--cream);font-size:11px;font-weight:600;padding:3px 8px;border-radius:3px;margin-left:auto}
+  .thumb .playdot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,254,244,.95);display:grid;place-items:center;opacity:0;transition:opacity .2s}
+  .card:hover .playdot{opacity:1}
+  .card-body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .card h4{font-size:17px;font-weight:600;line-height:1.3}
+  .card p{font-size:14px;color:var(--muted);flex:1}
+  .card-actions{display:flex;gap:8px;margin-top:10px}
+  .card-actions .chip-btn{border-color:var(--navy)}
+  .card-actions .chip-btn.solid{background:var(--navy);color:var(--cream)}
+  .card-actions .chip-btn.added{background:var(--green);border-color:var(--green);color:var(--navy)}
+  .empty{padding:48px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:4px;display:none}
+
+  /* Custom */
+  .custom{background:var(--powder)}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:44px}
+  .step{background:var(--cream);border-radius:4px;padding:22px;display:flex;gap:16px;align-items:flex-start}
+  .step b{width:32px;height:32px;border-radius:50%;background:var(--klein);color:#fff;display:grid;place-items:center;font-size:14px;flex-shrink:0}
+  .step h5{font-size:16px;font-weight:600;margin-bottom:2px}
+  .step p{font-size:14px;color:var(--muted)}
+  .custom .card{border-color:rgba(2,17,42,.1)}
+  .fields-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .fields-list span{font-size:11px;padding:3px 8px;border-radius:3px;background:var(--sage);font-weight:600}
+
+  /* Footer */
+  footer{background:var(--navy);color:var(--cream);padding:56px 0 40px}
+  .foot{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;align-items:flex-end}
+  footer small{color:rgba(255,254,244,.55);font-size:12px;display:block;max-width:640px;margin-top:18px}
+
+  /* Drawer & modal */
+  .scrim{position:fixed;inset:0;background:rgba(2,17,42,.5);z-index:60;opacity:0;pointer-events:none;transition:opacity .2s}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(460px,100%);background:var(--cream);z-index:70;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column}
+  .drawer.open{transform:none}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:24px 28px;border-bottom:1px solid var(--line)}
+  .drawer-head h3{font-size:22px;font-weight:500}
+  .drawer-body{flex:1;overflow:auto;padding:20px 28px}
+  .drawer-foot{padding:20px 28px;border-top:1px solid var(--line)}
+  .item{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+  .item .sw{width:64px;height:40px;border-radius:3px;flex-shrink:0;overflow:hidden}
+  .item .t{flex:1;font-size:14px;font-weight:600;line-height:1.3}
+  .item .t span{display:block;font-weight:400;color:var(--muted);font-size:12px}
+  .x{width:32px;height:32px;border-radius:50%;display:grid;place-items:center}
+  .x:hover{background:rgba(2,17,42,.07)}
+  label.f{display:block;font-size:13px;font-weight:600;margin:16px 0 6px}
+  .in{width:100%;border:1.5px solid var(--line);border-radius:6px;padding:11px 12px;background:#fff;outline:none}
+  .in:focus{border-color:var(--klein)}
+  textarea.in{min-height:110px;resize:vertical}
+
+  .modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:24px;pointer-events:none;opacity:0;transition:opacity .2s}
+  .modal.open{opacity:1;pointer-events:auto}
+  .modal-card{background:var(--cream);border-radius:6px;width:min(980px,100%);max-height:92vh;overflow:auto;display:grid;grid-template-columns:1fr 1fr}
+  .modal-card.single{grid-template-columns:1fr;width:min(620px,100%)}
+  .m-left{padding:32px;border-right:1px solid var(--line)}
+  .m-right{padding:32px;background:#fff}
+  .m-left h3{font-size:26px;font-weight:500;letter-spacing:-.01em;margin:6px 0 4px}
+  .preview-thumb{aspect-ratio:16/9;border-radius:4px;overflow:hidden;position:relative;margin-bottom:18px}
+  .preview-thumb .ov{position:absolute;left:18px;bottom:16px;right:18px;color:var(--cream)}
+  .preview-thumb .ov .hi{font-size:13px;opacity:.85}
+  .preview-thumb .ov .nm{font-size:26px;font-weight:500;line-height:1.1}
+  .script{font-size:14px;line-height:1.65;background:var(--cream);border-left:3px solid var(--klein);padding:14px 16px;border-radius:0 4px 4px 0}
+  .script mark{background:var(--sage);color:var(--navy);padding:0 3px;border-radius:2px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,20px);background:var(--navy);color:var(--cream);padding:14px 22px;border-radius:999px;font-size:14px;z-index:100;opacity:0;transition:all .25s;display:flex;gap:10px;align-items:center}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .toast i{width:8px;height:8px;border-radius:50%;background:var(--green)}
+  .modal-card.wide{width:min(1120px,100%)}
+  .timeline{display:flex;gap:2px;height:36px;border-radius:4px;overflow:hidden;margin-top:8px}
+  .seg{height:100%;display:grid;place-items:center;font-size:11px;font-weight:700;min-width:6px}
+  .seg.tpl{background:var(--powder);color:rgba(2,17,42,.55)}
+  .seg.slot{background:var(--klein);color:#fff;cursor:pointer}
+  .seg.slot.filled{background:var(--green);color:var(--navy)}
+  .seg.slot.sel{box-shadow:inset 0 0 0 3px var(--navy)}
+  .ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:6px 0 10px;font-variant-numeric:tabular-nums}
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-bottom:14px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .slot-row{display:flex;align-items:center;gap:12px;padding:12px;border:1.5px solid var(--line);border-radius:6px;margin-bottom:8px;cursor:pointer;background:var(--cream)}
+  .slot-row.sel{border-color:var(--klein)}
+  .slot-row .n{width:28px;height:28px;border-radius:50%;background:var(--klein);color:#fff;display:grid;place-items:center;font-size:13px;flex-shrink:0}
+  .slot-row.filled .n{background:var(--green);color:var(--navy)}
+  .slot-row .st{flex:1;font-size:14px;line-height:1.3}
+  .slot-row .st span{display:block;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .slot-row .sa{display:flex;gap:6px}
+  .slot-row .chip-btn{font-size:12px;padding:6px 11px}
+  .script-head{display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px;gap:10px}
+  .script-meta{font-size:12px;color:var(--muted);margin-top:8px}
+  .lt{position:absolute;left:16px;bottom:16px;background:var(--navy);color:var(--cream);padding:8px 14px 8px 12px;border-left:4px solid var(--green);font-size:13px;line-height:1.25}
+  .lt b{display:block;font-size:15px;font-weight:600}
+  .badge{position:absolute;top:12px;left:12px;background:rgba(255,254,244,.95);color:var(--navy);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border-radius:3px}
+  .forwho{position:absolute;top:12px;right:12px;background:var(--navy);color:var(--cream);font-size:11px;padding:5px 9px;border-radius:3px}
+  .cam{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);opacity:.9}
+  /* Login */
+  body.locked{overflow:hidden}
+  #login{position:fixed;inset:0;z-index:200;display:grid;grid-template-columns:1fr 1fr;background:var(--cream);transition:opacity .45s ease}
+  #login.out{opacity:0;pointer-events:none}
+  .lg-art{background:var(--navy);color:var(--cream);padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+  .lg-art .rings{position:absolute;right:-160px;bottom:-160px}
+  .lg-art h2{font-size:clamp(44px,5vw,72px);font-weight:500;letter-spacing:-.025em;line-height:1;position:relative}
+  .lg-art p{color:rgba(255,254,244,.7);max-width:380px;margin-top:18px;font-size:17px;position:relative}
+  .lg-form{display:grid;place-items:center;padding:48px}
+  .lg-box{width:min(400px,100%)}
+  .lg-box h3{font-size:30px;font-weight:500;letter-spacing:-.01em;margin:8px 0 6px}
+  .lg-box .sub{color:var(--muted);font-size:15px;margin-bottom:10px}
+  .pw{position:relative}
+  .pw button{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:var(--klein)}
+  .lg-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin:14px 0 22px}
+  .lg-row label{display:flex;gap:8px;align-items:center}
+  .lg-row a{color:var(--klein);font-weight:600;cursor:pointer}
+  .lg-err{color:#C8352C;font-size:13px;margin-top:6px;min-height:18px}
+  .in.bad{border-color:var(--orange)}
+  .full{width:100%;justify-content:center}
+  .or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;margin:18px 0}
+  .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+  .spin{width:16px;height:16px;border:2px solid rgba(255,254,244,.35);border-top-color:var(--cream);border-radius:50%;animation:sp .7s linear infinite;display:none}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .me{display:flex;align-items:center;gap:10px;position:relative}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--gold);display:grid;place-items:center;font-weight:700;font-size:13px}
+  .menu{position:absolute;top:48px;right:0;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 14px 34px -18px rgba(2,17,42,.4);min-width:220px;padding:8px;display:none;z-index:50}
+  .menu.open{display:block}
+  .menu .who{padding:8px 10px 10px;border-bottom:1px solid var(--line);margin-bottom:6px;font-size:13px}
+  .menu .who b{display:block;font-size:14px}
+  .menu button{width:100%;text-align:left;padding:9px 10px;border-radius:4px;font-size:14px}
+  .menu button:hover{background:var(--cream)}
+  .nav-right{display:flex;align-items:center;gap:14px}
+  @media (max-width:900px){#login{grid-template-columns:1fr}.lg-art{display:none}}
+  .progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin:14px 0 4px;display:none}
+  .progress i{display:block;height:100%;width:0;background:var(--klein);transition:width 1.4s ease}
+
+  @media (max-width:900px){
+    .hero-grid,.pod-feature,.modal-card{grid-template-columns:1fr}
+    .episodes,.steps{grid-template-columns:1fr}
+    .nav ul{display:none}
+    .m-left{border-right:none;border-bottom:1px solid var(--line)}
+  }
+</style>
+</head>
+<body>
+
+<!-- Farther mark (reusable) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="farther-mark" viewBox="0 0 202 246">
+      <g fill="none" stroke="currentColor" stroke-width="19" stroke-linejoin="miter">
+        <path d="M202 10 H10 V168 q0 8 -7 13 q7 5 7 13 V246"/>
+        <path d="M202 55 H57 V168 q0 8 -7 13 q7 5 7 13 V246"/>
+        <path d="M202 100 H104 V168 q0 8 -7 13 q7 5 7 13 V246"/>
+        <path d="M104 168 H184"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Login screen (demo only) -->
+<div id="login">
+  <div class="lg-art">
+    <div class="brand" style="color:var(--cream)">
+      <svg viewBox="0 0 202 246" style="height:40px;color:var(--cream)"><use href="#farther-mark"/></svg>
+      <span class="word">Farther</span>
+    </div>
+    <div>
+      <div class="eyebrow" style="color:var(--gold)">Advisor Resource Hub</div>
+      <h2 style="margin-top:14px">Video<br>Village</h2>
+      <p>Explainers, podcast episodes and personalized videos for your clients, all in one place.</p>
+    </div>
+    <div style="font-size:12px;color:rgba(255,254,244,.5);position:relative">For Farther advisors only</div>
+    <svg class="rings" width="520" height="520" viewBox="0 0 520 520" fill="none" stroke-width="22"><circle cx="260" cy="260" r="110" stroke="#39D435"/><circle cx="260" cy="260" r="170" stroke="#6EA6CD"/><circle cx="260" cy="260" r="230" stroke="#142EDB"/></svg>
+  </div>
+  <div class="lg-form">
+    <form class="lg-box" id="lgForm" novalidate>
+      <div class="eyebrow" style="color:var(--muted)">Welcome back</div>
+      <h3>Sign in to Video Village</h3>
+      <p class="sub">Use your Farther email and password.</p>
+      <label class="f" for="lgEmail">Email</label>
+      <input class="in" id="lgEmail" type="email" placeholder="you@farther.com" autocomplete="username">
+      <label class="f" for="lgPw">Password</label>
+      <div class="pw"><input class="in" id="lgPw" type="password" placeholder="••••••••" autocomplete="current-password"><button type="button" id="lgShow">Show</button></div>
+      <div class="lg-err" id="lgErr"></div>
+      <div class="lg-row">
+        <label><input type="checkbox" checked> Keep me signed in</label>
+        <a id="lgForgot">Forgot password?</a>
+      </div>
+      <button class="btn btn-dark full" id="lgBtn" type="submit"><span class="spin" id="lgSpin"></span><span id="lgTxt">Sign in</span></button>
+      <div class="or">or</div>
+      <button class="btn btn-line full" type="button" id="lgSso">Continue with Farther SSO</button>
+      <p style="font-size:12px;color:var(--muted);margin-top:22px">Demo sign-in: any valid email and password will work.</p>
+    </form>
+  </div>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="brand">
+      <svg viewBox="0 0 202 246" style="color:var(--navy)"><use href="#farther-mark"/></svg>
+      <span class="word">Farther</span>
+      <span class="divider"></span>
+      <span class="product">Video Village</span>
+    </a>
+    <ul>
+      <li><a href="#podcast">Podcast</a></li>
+      <li><a href="#library">Ready to Send</a></li>
+      <li><a href="#custom">Personalized</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="tray-btn" id="openTray">Send list <span class="count" id="count">0</span></button>
+      <div class="me">
+        <button class="avatar" id="avatar" aria-label="Account">--</button>
+        <div class="menu" id="menu">
+          <div class="who"><b id="meName"></b><span id="meEmail" style="color:var(--muted)"></span></div>
+          <button id="signOut">Sign out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Advisor Resource Hub</div>
+        <h1>Video Village</h1>
+        <p>Clear, on-brand video for the conversations that matter. Pick a video, add a note, and send it to your client in seconds — or tailor it to their exact situation.</p>
+        <div class="hero-ctas">
+          <a href="#library" class="btn btn-dark">Browse the library →</a>
+          <a href="#custom" class="btn btn-line">Personalize a video</a>
+        </div>
+      </div>
+      <div class="hero-tiles">
+        <a href="#podcast" class="tile big">
+          <span class="eyebrow" style="color:var(--gold)">01 — Podcast</span>
+          <strong>What Money's For</strong>
+          <svg class="arcs" width="200" height="200" viewBox="0 0 200 200" fill="none" stroke="#39D435" stroke-width="10"><circle cx="200" cy="200" r="60"/><circle cx="200" cy="200" r="95"/><circle cx="200" cy="200" r="130"/></svg>
+        </a>
+        <a href="#library" class="tile" style="background:var(--sage)">
+          <span class="eyebrow">02 — Ready to Send</span>
+          <strong>Core financial concepts</strong>
+        </a>
+        <a href="#custom" class="tile" style="background:var(--klein);color:#fff">
+          <span class="eyebrow">03 — Lower Third Studio</span>
+          <strong>Built around your client</strong>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PODCAST -->
+  <section class="block podcast" id="podcast">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><div class="num">01</div><h2>The Podcast</h2></div>
+        <p>Longer-form conversations on the purpose behind wealth. Share a full episode or a highlight clip with clients who like to go deeper.</p>
+      </div>
+
+      <div class="pod-feature">
+        <div class="pod-art">
+          <div class="by">A FARTHER PODCAST</div>
+          <div class="title">What<br>Money's<br>For</div>
+          <svg width="220" height="220" viewBox="0 0 220 220" fill="none" stroke="#02112A" stroke-width="12"><circle cx="220" cy="220" r="70"/><circle cx="220" cy="220" r="110"/><circle cx="220" cy="220" r="150"/></svg>
+        </div>
+        <div class="pod-info">
+          <div class="eyebrow" style="color:var(--green)">Latest episode</div>
+          <h3 id="featTitle"></h3>
+          <p id="featDesc"></p>
+          <div class="player">
+            <button class="play" id="playBtn" aria-label="Play"><svg id="playIco" width="16" height="16" viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z" fill="#02112A"/></svg></button>
+            <div class="bar"><i id="prog"></i></div>
+            <span class="time" id="ptime">0:00 / 42:10</span>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:18px">
+            <button class="chip-btn solid" id="featSend">Send to client</button>
+            <button class="chip-btn" id="featAdd">+ Add to send list</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule">All episodes</div>
+      <div class="episodes" id="episodes"></div>
+    </div>
+  </section>
+
+  <!-- LIBRARY -->
+  <section class="block" id="library">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><div class="num">02</div><h2>Ready to Send</h2></div>
+        <p>Compliance-approved explainers on broad financial planning ideas. No setup needed — send as-is with a personal note.</p>
+      </div>
+      <div class="toolbar">
+        <label class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="q" placeholder="Search topics, e.g. “Roth”, “market volatility”">
+        </label>
+        <div class="filters" id="filters"></div>
+      </div>
+      <div class="grid" id="libGrid"></div>
+      <div class="empty" id="empty">No videos match that search. Try a different topic.</div>
+    </div>
+  </section>
+
+  <!-- CUSTOM -->
+  <section class="block custom" id="custom">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><div class="num">03</div><h2>Personalized Videos</h2></div>
+        <p>Powered by Lower Third Studio, Farther's proprietary video tool. Drop in your client's details and generate a video that speaks directly to their plan.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><b>1</b><div><h5>Choose a template</h5><p>Pick the scenario that fits your client.</p></div></div>
+        <div class="step"><b>2</b><div><h5>Add client details</h5><p>Names, figures and goals flow into the script.</p></div></div>
+        <div class="step"><b>3</b><div><h5>Generate & send</h5><p>Preview, approve and deliver in one step.</p></div></div>
+      </div>
+      <div class="grid" id="customGrid"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="brand" style="color:var(--cream)">
+        <svg viewBox="0 0 202 246" style="height:40px;color:var(--cream)"><use href="#farther-mark"/></svg>
+        <span class="word">Farther</span><span class="divider" style="background:rgba(255,254,244,.3)"></span><span class="product" style="color:rgba(255,254,244,.7)">Video Village</span>
+      </div>
+      <div style="font-size:14px;color:rgba(255,254,244,.7)">For internal advisor use · Questions? Contact Marketing</div>
+    </div>
+    <small>Videos are for educational purposes only and do not constitute individualized investment, tax, or legal advice. Personalized videos should be reviewed before sending in accordance with firm compliance policies. Episode and video content shown is sample content.</small>
+  </div>
+</footer>
+
+<!-- Send list drawer -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><h3>Send list</h3><button class="x" data-close>✕</button></div>
+  <div class="drawer-body">
+    <div id="trayItems"></div>
+    <div id="trayEmpty" style="color:var(--muted);font-size:14px;padding:24px 0">Nothing here yet. Add videos or episodes from the library and send them together.</div>
+    <div id="trayForm">
+      <label class="f">Client email</label>
+      <input class="in" id="tEmail" placeholder="client@email.com">
+      <label class="f">Personal note</label>
+      <textarea class="in" id="tNote">Hi — following up on our conversation, I pulled together a few short videos I think you'll find helpful. Happy to talk through any questions.</textarea>
+    </div>
+  </div>
+  <div class="drawer-foot" style="display:flex;gap:10px">
+    <button class="btn btn-line" id="copyLinks" style="flex:1;justify-content:center">Copy links</button>
+    <button class="btn btn-dark" id="sendAll" style="flex:1;justify-content:center">Send</button>
+  </div>
+</aside>
+
+<!-- Single send modal -->
+<div class="modal" id="sendModal">
+  <div class="modal-card single">
+    <div class="m-left" style="border:none">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div class="eyebrow" style="color:var(--muted)">Send to client</div><h3 id="sTitle"></h3></div>
+        <button class="x" data-close>✕</button>
+      </div>
+      <div class="preview-thumb" id="sThumb" style="margin-top:18px"></div>
+      <div class="row2">
+        <div><label class="f">Client name</label><input class="in" id="sName" placeholder="Jordan Lee"></div>
+        <div><label class="f">Client email</label><input class="in" id="sEmail" placeholder="client@email.com"></div>
+      </div>
+      <label class="f">Personal note</label>
+      <textarea class="in" id="sNote"></textarea>
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button class="btn btn-line" id="sCopy">Copy link</button>
+        <button class="btn btn-dark" id="sSend">Send video</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Customize modal -->
+<div class="modal" id="custModal">
+  <div class="modal-card wide">
+    <div class="m-left">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div class="eyebrow" style="color:var(--klein)">Lower Third Studio</div><h3 id="cTitle"></h3></div>
+        <button class="x" data-close>✕</button>
+      </div>
+      <p id="cDesc" style="color:var(--muted);font-size:14px"></p>
+      <div id="cFields"></div>
+      <label class="f">Send to (email)</label>
+      <input class="in" id="cEmail" placeholder="client@email.com">
+      <div class="progress" id="cProg"><i></i></div>
+      <div style="display:flex;gap:10px;margin-top:22px">
+        <button class="btn btn-blue" id="cGen">Generate & send</button>
+      </div>
+    </div>
+    <div class="m-right">
+      <div class="eyebrow" style="color:var(--muted);margin-bottom:12px">Live preview</div>
+      <div class="preview-thumb" id="cThumb"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div class="eyebrow" style="color:var(--muted)">Video timeline</div>
+        <span id="cFilled" style="font-size:12px;color:var(--muted)"></span>
+      </div>
+      <div class="timeline" id="cTimeline"></div>
+      <div class="ticks" id="cTicks"></div>
+      <div class="legend"><span><i style="background:var(--powder)"></i>Studio content</span><span><i style="background:var(--klein)"></i>Your video slot</span><span><i style="background:var(--green)"></i>Clip added</span></div>
+      <div id="cSlots"></div>
+      <div class="script-head">
+        <div class="eyebrow" id="cScriptLabel" style="color:var(--muted)"></div>
+        <button class="chip-btn" id="cCopyScript" style="font-size:12px;padding:6px 11px">Copy script</button>
+      </div>
+      <div class="script" id="cScript"></div>
+      <div class="script-meta" id="cScriptMeta"></div>
+      <input type="file" accept="video/*" id="cFile" hidden>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i></i><span></span></div>
+
+<script>
+const C = {cream:'#FFFEF4',gold:'#C3C1A8',navy:'#02112A',klein:'#142EDB',green:'#39D435',sage:'#BFE1BE',steel:'#6EA6CD',powder:'#BAE8EB',orange:'#FE665C'};
+
+/* ---------- Data (sample content) ---------- */
+const episodes = [
+  {id:'p1',title:'Ep. 24 — The Real Cost of Waiting',guest:'with a Farther Wealth Advisor',dur:'42 min',date:'Sep 2026',desc:'Why the “right time” to plan rarely arrives, and what families gain by starting before a big life event forces the issue.'},
+  {id:'p2',title:'Ep. 23 — Wealth That Outlasts You',guest:'Estate planning roundtable',dur:'38 min',date:'Aug 2026',desc:'Legacy is more than an inheritance. A candid conversation on values, trusts, and preparing the next generation.'},
+  {id:'p3',title:'Ep. 22 — Selling the Business',guest:'Founder story',dur:'51 min',date:'Jul 2026',desc:'A founder walks through life after a liquidity event: the tax surprises, the identity shift, and the plan that followed.'},
+  {id:'p4',title:'Ep. 21 — Enough',guest:'On defining financial independence',dur:'35 min',date:'Jun 2026',desc:'What does “enough” look like? We unpack how to set a number that supports the life you actually want.'},
+  {id:'p5',title:'Ep. 20 — Money & Marriage',guest:'Couples & planning',dur:'44 min',date:'May 2026',desc:'Different money personalities under one roof. Practical ways couples can get aligned on spending, saving, and goals.'},
+  {id:'p6',title:'Ep. 19 — Calm in the Chaos',guest:'Markets & behavior',dur:'40 min',date:'Apr 2026',desc:'Volatility is inevitable. Panic is optional. How disciplined investors think about downturns.'}
+];
+
+const library = [
+  {id:'l1',cat:'Investing',title:'Diversification, Simply Explained',dur:'2:45',desc:'Why spreading risk across asset classes matters, and what it does (and doesn’t) protect against.',c:[C.sage,C.navy]},
+  {id:'l2',cat:'Investing',title:'Staying Invested Through Volatility',dur:'3:10',desc:'The cost of missing the market’s best days, and why time in the market beats timing it.',c:[C.orange,C.navy]},
+  {id:'l3',cat:'Retirement',title:'How Much Do I Need to Retire?',dur:'4:05',desc:'A framework for thinking about spending, longevity, and withdrawal rates.',c:[C.powder,C.klein]},
+  {id:'l4',cat:'Retirement',title:'Social Security Basics',dur:'3:30',desc:'How benefits are calculated and what claiming early vs. late really means.',c:[C.steel,C.cream]},
+  {id:'l5',cat:'Tax',title:'Roth vs. Traditional Accounts',dur:'2:55',desc:'Pay taxes now or later? The trade-offs behind each account type.',c:[C.green,C.navy]},
+  {id:'l6',cat:'Tax',title:'What Is Tax-Loss Harvesting?',dur:'2:20',desc:'How realizing losses can offset gains and improve after-tax returns.',c:[C.gold,C.klein]},
+  {id:'l7',cat:'Estate',title:'Wills vs. Trusts',dur:'3:40',desc:'What each document does, when you need one, and common misconceptions.',c:[C.navy,C.gold]},
+  {id:'l8',cat:'Estate',title:'Why Beneficiary Designations Matter',dur:'1:50',desc:'A five-minute review that can prevent years of complications for your heirs.',c:[C.sage,C.klein]},
+  {id:'l9',cat:'Insurance',title:'How Much Life Insurance Is Enough?',dur:'3:05',desc:'Term vs. permanent coverage and how to size a policy to your family’s needs.',c:[C.powder,C.navy]},
+  {id:'l10',cat:'Education',title:'Saving for College with a 529',dur:'2:35',desc:'Tax benefits, flexibility, and how 529 plans fit alongside other goals.',c:[C.orange,C.cream]},
+  {id:'l11',cat:'Behavior',title:'The Psychology of Money Decisions',dur:'3:50',desc:'Common biases that derail good plans, and simple ways to guard against them.',c:[C.klein,C.powder]},
+  {id:'l12',cat:'Investing',title:'Understanding Fees & What You Pay',dur:'2:15',desc:'A transparent look at advisory fees, fund expenses, and their long-term impact.',c:[C.steel,C.navy]}
+];
+
+const custom = [
+  {id:'c1',cat:'Retirement',title:'Your Retirement Income Plan',total:240,desc:'Walks your client through their projected income sources and spending plan.',c:[C.klein,C.powder],
+    fields:[{k:'name',l:'Client first name',v:'Jordan'},{k:'age',l:'Target retirement age',v:'62'},{k:'income',l:'Annual spending goal',v:'$180,000'}],
+    slots:[
+      {s:0,e:20,label:'Personal welcome',script:f=>`Hi <mark>${f.name}</mark>, thanks for taking a few minutes to watch this. We’ve been working hard on your retirement plan, and I wanted to show you how it all comes together as you work toward retiring at <mark>${f.age}</mark>.`},
+      {s:215,e:240,label:'Closing & next steps',script:f=>`Your spending goal of <mark>${f.income}</mark> isn’t just a number — it’s built around the life you told me you want. Once you’ve watched this, let’s find time to talk it through. No question is too small.`}
+    ]},
+  {id:'c2',cat:'Tax',title:'Your Roth Conversion Strategy',total:190,desc:'Explains a recommended multi-year conversion and its estimated tax impact.',c:[C.green,C.navy],
+    fields:[{k:'name',l:'Client first name',v:'Jordan'},{k:'amount',l:'Annual conversion amount',v:'$75,000'},{k:'years',l:'Number of years',v:'4'}],
+    slots:[
+      {s:80,e:105,label:'Why now',script:f=>`<mark>${f.name}</mark>, the key here is timing. Converting about <mark>${f.amount}</mark> a year over the next <mark>${f.years}</mark> years lets us use your current tax bracket before things change — so you pay tax on our terms, not later on someone else’s.`}
+    ]},
+  {id:'c3',cat:'Estate',title:'Your Estate Plan, Visualized',total:300,desc:'A clear map of how assets flow to heirs and beneficiaries under the plan.',c:[C.navy,C.sage],
+    fields:[{k:'name',l:'Client first name',v:'Jordan'},{k:'spouse',l:'Spouse / partner name',v:'Alex'},{k:'heirs',l:'Beneficiaries',v:'Maya and Sam'}],
+    slots:[
+      {s:0,e:25,label:'Personal welcome',script:f=>`<mark>${f.name}</mark> and <mark>${f.spouse}</mark>, estate planning isn’t the easiest topic, but it’s one of the most caring things you can do for your family. This short video lays out your plan in plain terms.`},
+      {s:140,e:165,label:'What this means for your family',script:f=>`Let’s pause here. Everything you’ve seen so far is designed around one goal — making things simpler for <mark>${f.heirs}</mark> when the time comes, with fewer decisions and less uncertainty.`}
+    ]},
+  {id:'c4',cat:'Equity Comp',title:'Understanding Your Equity Compensation',total:250,desc:'Breaks down vesting, taxes, and a concentration strategy for company stock.',c:[C.orange,C.navy],
+    fields:[{k:'name',l:'Client first name',v:'Jordan'},{k:'company',l:'Employer',v:'Acme Corp'},{k:'type',l:'Equity type',v:'RSUs'}],
+    slots:[
+      {s:0,e:20,label:'Personal welcome',script:f=>`Hi <mark>${f.name}</mark>. Your <mark>${f.type}</mark> at <mark>${f.company}</mark> are a big opportunity, and they come with some important decisions. I made this video so you can see the full picture — and our plan for each vest — in one place.`}
+    ]},
+  {id:'c5',cat:'Retirement',title:'Your Social Security Timing',total:180,desc:'Compares claiming ages using your client’s benefit estimates.',c:[C.steel,C.cream],
+    fields:[{k:'name',l:'Client first name',v:'Jordan'},{k:'claim',l:'Recommended claiming age',v:'70'},{k:'benefit',l:'Est. monthly benefit at that age',v:'$4,850'}],
+    slots:[
+      {s:155,e:180,label:'Closing & next steps',script:f=>`<mark>${f.name}</mark>, waiting until <mark>${f.claim}</mark> means a larger check — about <mark>${f.benefit}</mark> a month — for life. This decision is personal, so let’s talk it through together before anything is filed.`}
+    ]},
+  {id:'c6',cat:'Investing',title:'Your Portfolio Review',total:245,desc:'A personalized recap of allocation, performance, and next steps.',c:[C.gold,C.klein],
+    fields:[{k:'name',l:'Client first name',v:'Jordan'},{k:'period',l:'Review period',v:'Q3 2026'},{k:'alloc',l:'Target allocation',v:'70/30'}],
+    slots:[
+      {s:0,e:20,label:'Personal welcome',script:f=>`Hi <mark>${f.name}</mark>, here’s your <mark>${f.period}</mark> review. I wanted to give you a quick walkthrough of how your portfolio is doing and what we’re keeping an eye on.`},
+      {s:220,e:245,label:'Closing & next steps',script:f=>`Short-term market moves are normal — what counts is that you’re on track with your <mark>${f.alloc}</mark> allocation and long-term goals. If anything in your life has changed, let me know so your plan keeps up.`}
+    ]}
+];
+const tc = s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+
+/* ---------- Thumbnail art ---------- */
+function art(c, seed){
+  const [bg,fg] = c; const s = seed % 4;
+  let shape;
+  if(s===0) shape = `<circle cx="320" cy="180" r="60"/><circle cx="320" cy="180" r="100"/><circle cx="320" cy="180" r="140"/>`;
+  else if(s===1) shape = `<path d="M-10 150 Q80 60 170 120 T360 70"/><path d="M-10 190 Q80 100 170 160 T360 110"/>`;
+  else if(s===2) shape = `<rect x="200" y="100" width="36" height="80"/><rect x="250" y="70" width="36" height="110"/><rect x="300" y="40" width="36" height="140"/>`;
+  else shape = `<path d="M360 20 H230 V200"/><path d="M360 60 H270 V200"/><path d="M360 100 H310 V200"/>`;
+  const fill = s===2 ? `fill="${fg}" stroke="none"` : `fill="none" stroke="${fg}" stroke-width="14"`;
+  return `<svg class="art" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice"><rect width="320" height="180" fill="${bg}"/><g ${fill} opacity=".9">${shape}</g></svg>`;
+}
+const playIcon = `<svg width="18" height="18" viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z" fill="#02112A"/></svg>`;
+
+/* ---------- State ---------- */
+const tray = new Map();
+const all = {}; [...episodes.map(e=>({...e,kind:'Podcast',c:[C.gold,C.navy]})),...library.map(v=>({...v,kind:'Video'}))].forEach((x,i)=>all[x.id]={...x,seed:i});
+const linkFor = id => `https://farther.com/v/${id}`;
+
+/* ---------- Podcast ---------- */
+const feat = episodes[0];
+document.getElementById('featTitle').textContent = feat.title;
+document.getElementById('featDesc').textContent = feat.desc;
+document.getElementById('featSend').onclick = ()=>openSend(feat.id);
+document.getElementById('featAdd').onclick = ()=>toggleTray(feat.id);
+document.getElementById('episodes').innerHTML = episodes.map(e=>`
+  <div class="ep">
+    <div class="meta"><span>${e.date}</span><span>${e.dur}</span></div>
+    <h4>${e.title}</h4>
+    <p>${e.desc}</p>
+    <div class="actions">
+      <button class="chip-btn solid" onclick="openSend('${e.id}')">Send</button>
+      <button class="chip-btn" data-add="${e.id}" onclick="toggleTray('${e.id}')">+ Send list</button>
+    </div>
+  </div>`).join('');
+
+// demo player
+let playing=false, t=0, timer; const total=42*60+10;
+const fmt = s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+document.getElementById('playBtn').onclick=()=>{
+  playing=!playing;
+  document.getElementById('playIco').innerHTML = playing ? '<rect x="3" y="2" width="3.5" height="12" fill="#02112A"/><rect x="9.5" y="2" width="3.5" height="12" fill="#02112A"/>' : '<path d="M4 2l10 6-10 6z" fill="#02112A"/>';
+  clearInterval(timer);
+  if(playing) timer=setInterval(()=>{t=Math.min(total,t+15);document.getElementById('prog').style.width=(t/total*100)+'%';document.getElementById('ptime').textContent=`${fmt(t)} / ${fmt(total)}`},300);
+};
+
+/* ---------- Library ---------- */
+const cats = ['All',...new Set(library.map(v=>v.cat))];
+let activeCat='All';
+document.getElementById('filters').innerHTML = cats.map(c=>`<button class="filter ${c==='All'?'on':''}" data-cat="${c}">${c}</button>`).join('');
+document.getElementById('filters').onclick = e=>{
+  const b=e.target.closest('.filter'); if(!b) return;
+  activeCat=b.dataset.cat; document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x===b)); renderLib();
+};
+document.getElementById('q').oninput = renderLib;
+function renderLib(){
+  const q=document.getElementById('q').value.toLowerCase().trim();
+  const list=library.filter(v=>(activeCat==='All'||v.cat===activeCat)&&(!q||(v.title+v.desc+v.cat).toLowerCase().includes(q)));
+  document.getElementById('libGrid').innerHTML = list.map(v=>`
+    <article class="card">
+      <div class="thumb">${art(v.c,all[v.id].seed)}<div class="playdot">${playIcon}</div><span class="dur">${v.dur}</span></div>
+      <div class="card-body">
+        <span class="tag">${v.cat}</span>
+        <h4>${v.title}</h4>
+        <p>${v.desc}</p>
+        <div class="card-actions">
+          <button class="chip-btn solid" onclick="openSend('${v.id}')">Send to client</button>
+          <button class="chip-btn ${tray.has(v.id)?'added':''}" data-add="${v.id}" onclick="toggleTray('${v.id}')">${tray.has(v.id)?'✓ Added':'+ Send list'}</button>
+        </div>
+      </div>
+    </article>`).join('');
+  document.getElementById('empty').style.display = list.length?'none':'block';
+}
+renderLib();
+
+/* ---------- Custom ---------- */
+document.getElementById('customGrid').innerHTML = custom.map((v,i)=>`
+  <article class="card">
+    <div class="thumb">${art(v.c,i+1)}<span class="dur" style="background:${C.klein}">Personalized · ${tc(v.total)}</span></div>
+    <div class="card-body">
+      <span class="tag">${v.cat}</span>
+      <h4>${v.title}</h4>
+      <p>${v.desc}</p>
+      <div class="fields-list"><span style="background:var(--klein);color:#fff">${v.slots.length} advisor slot${v.slots.length>1?'s':''}</span>${v.slots.map(s=>`<span>${tc(s.s)}–${tc(s.e)}</span>`).join('')}</div>
+      <div class="card-actions"><button class="chip-btn solid" style="background:${C.klein};border-color:${C.klein}" onclick="openCustom('${v.id}')">Customize in Lower Third Studio →</button></div>
+    </div>
+  </article>`).join('');
+
+let cur, sel=0, filled=[];
+const ADVISOR={k:'advisor',l:'Your name (on-screen lower third)',v:'Taylor Morgan, CFP®'};
+function openCustom(id){
+  cur = custom.find(v=>v.id===id); const i = custom.indexOf(cur);
+  sel=0; filled=cur.slots.map(()=>null);
+  document.getElementById('cTitle').textContent=cur.title;
+  document.getElementById('cDesc').textContent=cur.desc+` Runtime ${tc(cur.total)} · ${cur.slots.length} slot${cur.slots.length>1?'s':''} for your own video.`;
+  document.getElementById('cFields').innerHTML = [ADVISOR,...cur.fields].map(f=>`<label class="f">${f.l}</label><input class="in" data-k="${f.k}" value="${f.v}">`).join('');
+  document.getElementById('cFields').oninput = updCustom;
+  document.getElementById('cThumb').dataset.i=i;
+  document.getElementById('cProg').style.display='none'; document.querySelector('#cProg i').style.width='0';
+  const q=[0,.25,.5,.75,1].map(p=>tc(Math.round(cur.total*p)));
+  document.getElementById('cTicks').innerHTML=q.map(x=>`<span>${x}</span>`).join('');
+  updCustom(); openModal('custModal');
+}
+function segs(){
+  const out=[]; let t=0;
+  cur.slots.forEach((s,i)=>{ if(s.s>t) out.push({s:t,e:s.s}); out.push({s:s.s,e:s.e,i}); t=s.e; });
+  if(t<cur.total) out.push({s:t,e:cur.total}); return out;
+}
+function vals(){const f={}; document.querySelectorAll('#cFields .in').forEach(el=>f[el.dataset.k]=el.value||'—'); return f}
+function updCustom(){
+  const f=vals(), s=cur.slots[sel], i=+document.getElementById('cThumb').dataset.i;
+  // timeline
+  document.getElementById('cTimeline').innerHTML = segs().map(g=> g.i===undefined
+    ? `<div class="seg tpl" style="flex:${g.e-g.s}" title="Studio content ${tc(g.s)}–${tc(g.e)}"></div>`
+    : `<div class="seg slot ${filled[g.i]?'filled':''} ${g.i===sel?'sel':''}" data-slot="${g.i}" style="flex:${Math.max(g.e-g.s,14)}" title="Your video ${tc(g.s)}–${tc(g.e)}">${g.i+1}</div>`).join('');
+  // slot list
+  document.getElementById('cSlots').innerHTML = cur.slots.map((x,k)=>`
+    <div class="slot-row ${k===sel?'sel':''} ${filled[k]?'filled':''}" data-slot="${k}">
+      <b class="n">${filled[k]?'✓':k+1}</b>
+      <div class="st"><strong>Slot ${k+1} · ${x.label}</strong><span>${tc(x.s)} – ${tc(x.e)} · ${x.e-x.s} sec${filled[k]?' · '+filled[k]:''}</span></div>
+      <div class="sa">${filled[k]
+        ? `<button class="chip-btn" data-act="clear" data-slot="${k}">Replace</button>`
+        : `<button class="chip-btn" data-act="rec" data-slot="${k}">● Record</button><button class="chip-btn" data-act="up" data-slot="${k}">Upload</button>`}</div>
+    </div>`).join('');
+  const n=filled.filter(Boolean).length;
+  document.getElementById('cFilled').textContent=`${n} of ${cur.slots.length} slot${cur.slots.length>1?'s':''} filled`;
+  // preview
+  const lightBg=![C.navy,C.klein].includes(cur.c[0]);
+  document.getElementById('cThumb').innerHTML = art(cur.c,i+1)+`
+    <svg class="cam" width="90" height="90" viewBox="0 0 90 90" fill="${lightBg?C.navy:C.cream}" opacity=".55"><circle cx="45" cy="32" r="17"/><path d="M12 88c2-20 16-32 33-32s31 12 33 32z"/></svg>
+    <span class="badge">Slot ${sel+1} · ${tc(s.s)}–${tc(s.e)} · ${filled[sel]?'Your clip':'Your video here'}</span>
+    <span class="forwho">For ${f.spouse?f.name+' & '+f.spouse:f.name}</span>
+    <div class="lt"><b>${f.advisor}</b>Wealth Advisor · Farther</div>`;
+  // script
+  const html=s.script(f), words=html.replace(/<[^>]+>/g,'').split(/\s+/).filter(Boolean).length;
+  document.getElementById('cScriptLabel').textContent=`Suggested script · Slot ${sel+1}`;
+  document.getElementById('cScript').innerHTML=html;
+  document.getElementById('cScriptMeta').textContent=`${words} words · about ${Math.round(words/2.5)} sec at a natural pace (slot is ${s.e-s.s} sec). Feel free to put it in your own words.`;
+}
+let upSlot=null;
+document.getElementById('cSlots').onclick=e=>{
+  const btn=e.target.closest('[data-act]'), row=e.target.closest('[data-slot]'); if(!row) return;
+  const k=+row.dataset.slot; sel=k;
+  if(btn){
+    const act=btn.dataset.act;
+    if(act==='rec'){ filled[k]='Recorded clip'; toast(`Recorded clip added to slot ${k+1}`); }
+    if(act==='up'){ upSlot=k; document.getElementById('cFile').click(); }
+    if(act==='clear'){ filled[k]=null; }
+  }
+  updCustom();
+};
+document.getElementById('cTimeline').onclick=e=>{const g=e.target.closest('[data-slot]'); if(g){sel=+g.dataset.slot; updCustom();}};
+document.getElementById('cFile').onchange=e=>{
+  const file=e.target.files[0]; if(file&&upSlot!==null){filled[upSlot]=file.name; toast(`${file.name} added to slot ${upSlot+1}`); updCustom();}
+  e.target.value='';
+};
+document.getElementById('cCopyScript').onclick=()=>copy(document.getElementById('cScript').innerText,'Script copied to clipboard');
+document.getElementById('cGen').onclick=()=>{
+  const email=document.getElementById('cEmail').value.trim();
+  if(!email){toast('Add a client email to send');return}
+  const n=filled.filter(Boolean).length;
+  const p=document.getElementById('cProg'); p.style.display='block';
+  requestAnimationFrame(()=>document.querySelector('#cProg i').style.width='100%');
+  setTimeout(()=>{closeAll();toast(`Lower Third Studio video sent to ${email}${n?` with ${n} advisor clip${n>1?'s':''}`:''}`)},1500);
+};
+
+/* ---------- Send list ---------- */
+function toggleTray(id){
+  tray.has(id)?tray.delete(id):tray.set(id,all[id]);
+  toast(tray.has(id)?'Added to send list':'Removed from send list');
+  refreshTray();
+}
+function refreshTray(){
+  document.getElementById('count').textContent=tray.size;
+  document.querySelectorAll('[data-add]').forEach(b=>{const on=tray.has(b.dataset.add);b.classList.toggle('added',on);b.textContent=on?'✓ Added':'+ Send list'});
+  const fa=document.getElementById('featAdd'); fa.classList.toggle('added',tray.has(feat.id)); fa.textContent=tray.has(feat.id)?'✓ Added':'+ Add to send list';
+  document.getElementById('trayItems').innerHTML=[...tray.values()].map(x=>`
+    <div class="item"><div class="sw">${art(x.c,x.seed).replace('class="art"','style="width:100%;height:100%"')}</div>
+    <div class="t">${x.title}<span>${x.kind} · ${x.dur}</span></div>
+    <button class="x" onclick="toggleTray('${x.id}')">✕</button></div>`).join('');
+  document.getElementById('trayEmpty').style.display=tray.size?'none':'block';
+  document.getElementById('trayForm').style.display=tray.size?'block':'none';
+}
+refreshTray();
+document.getElementById('openTray').onclick=()=>{document.getElementById('drawer').classList.add('open');document.getElementById('scrim').classList.add('open')};
+document.getElementById('copyLinks').onclick=()=>{
+  if(!tray.size) return toast('Your send list is empty');
+  copy([...tray.values()].map(x=>`${x.title} — ${linkFor(x.id)}`).join('\n'),'Links copied to clipboard');
+};
+document.getElementById('sendAll').onclick=()=>{
+  const e=document.getElementById('tEmail').value.trim();
+  if(!tray.size) return toast('Your send list is empty');
+  if(!e) return toast('Add a client email to send');
+  const n=tray.size; tray.clear(); refreshTray(); closeAll(); toast(`${n} item${n>1?'s':''} sent to ${e}`);
+};
+
+/* ---------- Single send ---------- */
+let sendId;
+function openSend(id){
+  sendId=id; const x=all[id];
+  document.getElementById('sTitle').textContent=x.title;
+  document.getElementById('sThumb').innerHTML=art(x.c,x.seed)+`<span class="dur" style="position:absolute;right:14px;bottom:14px">${x.kind} · ${x.dur}</span>`;
+  document.getElementById('sNote').value=`Hi — I thought this ${x.kind==='Podcast'?'episode':'short video'} on “${x.title.replace(/^Ep\. \d+ — /,'')}” would be helpful given what we discussed. Let me know if you’d like to talk it through.`;
+  openModal('sendModal');
+}
+document.getElementById('sCopy').onclick=()=>copy(linkFor(sendId),'Link copied to clipboard');
+document.getElementById('sSend').onclick=()=>{
+  const e=document.getElementById('sEmail').value.trim();
+  if(!e) return toast('Add a client email to send');
+  closeAll(); toast(`Sent to ${e}`);
+};
+
+/* ---------- Helpers ---------- */
+function openModal(id){document.getElementById(id).classList.add('open');document.getElementById('scrim').classList.add('open')}
+function closeAll(){document.querySelectorAll('.modal,.drawer,.scrim').forEach(x=>x.classList.remove('open'))}
+document.getElementById('scrim').onclick=closeAll;
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeAll);
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeAll()}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+function copy(txt,msg){(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast(msg)).catch(()=>toast(msg))}
+let tt; function toast(msg){const t=document.getElementById('toast');t.querySelector('span').textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2400)}
+/* ---------- Login (demo) ---------- */
+document.body.classList.add('locked');
+const lg=id=>document.getElementById(id);
+function nameFrom(email){return email.split('@')[0].split(/[._-]+/).filter(Boolean).map(w=>w[0].toUpperCase()+w.slice(1)).join(' ')}
+function signIn(email){
+  const name=nameFrom(email);
+  lg('meName').textContent=name; lg('meEmail').textContent=email;
+  lg('avatar').textContent=name.split(' ').map(w=>w[0]).slice(0,2).join('');
+  ADVISOR.v=name;
+  lg('login').classList.add('out'); document.body.classList.remove('locked');
+  window.scrollTo(0,0);
+  setTimeout(()=>toast(`Welcome, ${name.split(' ')[0]}`),350);
+}
+function busy(on){lg('lgSpin').style.display=on?'block':'none';lg('lgTxt').textContent=on?'Signing in…':'Sign in';lg('lgBtn').disabled=on}
+lg('lgShow').onclick=()=>{const p=lg('lgPw');p.type=p.type==='password'?'text':'password';lg('lgShow').textContent=p.type==='password'?'Show':'Hide'};
+lg('lgForgot').onclick=()=>toast('Password reset link sent (demo)');
+lg('lgForm').onsubmit=e=>{
+  e.preventDefault();
+  const em=lg('lgEmail'), pw=lg('lgPw'); em.classList.remove('bad'); pw.classList.remove('bad'); lg('lgErr').textContent='';
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim())){em.classList.add('bad');lg('lgErr').textContent='Enter a valid email address.';return}
+  if(pw.value.length<1){pw.classList.add('bad');lg('lgErr').textContent='Enter your password.';return}
+  busy(true); setTimeout(()=>{busy(false);signIn(em.value.trim().toLowerCase())},900);
+};
+lg('lgSso').onclick=()=>{const em=lg('lgEmail').value.trim();busy(true);setTimeout(()=>{busy(false);signIn(/@/.test(em)?em.toLowerCase():'advisor@farther.com')},900)};
+lg('avatar').onclick=e=>{e.stopPropagation();lg('menu').classList.toggle('open')};
+document.addEventListener('click',e=>{if(!e.target.closest('.me'))lg('menu').classList.remove('open')});
+lg('signOut').onclick=()=>{
+  lg('menu').classList.remove('open'); closeAll();
+  lg('lgPw').value=''; document.body.classList.add('locked'); lg('login').classList.remove('out');
+};
+</script>
+</body>
+</html>
